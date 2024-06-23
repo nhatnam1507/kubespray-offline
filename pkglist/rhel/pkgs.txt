@@ -37,6 +37,7 @@ yum-plugin-versionlock
 firewalld
 gnupg2
 lvm2
+sshpass
 
 # nfs
 #rpcbind

@@ -45,33 +45,6 @@ decide_relative_dir() {
     fi
 }
 
-get_url() {
-    url=$1
-    filename="${url##*/}"
-
-    rdir=$(decide_relative_dir $url)
-
-    if [ -n "$rdir" ]; then
-        if [ ! -d $FILES_DIR/$rdir ]; then
-            mkdir -p $FILES_DIR/$rdir
-        fi
-    else
-        rdir="."
-    fi
-
-    if [ ! -e $FILES_DIR/$rdir/$filename ]; then
-        echo "==> Download $url"
-        for i in {1..3}; do
-            curl --location --show-error --fail --output $FILES_DIR/$rdir/$filename $url && return
-            echo "curl failed. Attempt=$i"
-        done
-        echo "Download failed, exit : $url"
-        exit 1
-    else
-        echo "==> Skip $url"
-    fi
-}
-
 # execute offline generate_list.sh
 generate_list() {
     #if [ $KUBESPRAY_VERSION == "2.18.0" ]; then
@@ -98,10 +71,7 @@ cp ${KUBESPRAY_DIR}/contrib/offline/temp/files.list $FILES_DIR/
 cp ${KUBESPRAY_DIR}/contrib/offline/temp/images.list $IMAGES_DIR/
 
 # download files
-files=$(cat ${FILES_DIR}/files.list)
-for i in $files; do
-    get_url $i
-done
+wget -x -i ${FILES_DIR}/files.list -P $FILES_DIR
 
 # download images
 ./download-images.sh || exit 1

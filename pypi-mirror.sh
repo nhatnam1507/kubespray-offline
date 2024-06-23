@@ -18,7 +18,7 @@ echo "==> Create pypi mirror for kubespray"
 #set -x
 pip install -U pip python-pypi-mirror
 
-DEST="-d outputs/pypi/files"
+DEST="-d outputs/repos/pypi/files"
 PLATFORM="--platform manylinux2014_x86_64"  # PEP-599
 #PLATFORM="--platform manylinux_2_17_x86_64"  # PEP-600
 
@@ -46,6 +46,6 @@ PKGS="$PKGS flit_core"  # build dependency of pyparsing (#6)
 PKGS="$PKGS cython<3"  # PyYAML requires Cython with python 3.10 (ubuntu 22.04)
 pip download $DEST pip $PKGS || exit 1
 
-pypi-mirror create $DEST -m outputs/pypi
+pypi-mirror create $DEST -m outputs/repos/pypi
 
 echo "pypi-mirror.sh done"
